@@ -27,8 +27,4 @@ jobs:
 
     - name: Push Docker image
       run: docker push natnov0809/devops_ws:latest
-<<<<<<< HEAD
-=======
 
-
->>>>>>> f59bcec520fa52dc6d6d78349282040bab76e1b8
