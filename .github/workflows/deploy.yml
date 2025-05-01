@@ -23,8 +23,8 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build Docker image
-      run: docker build -t 
-natnov0809/devops_ws:latest .
+      run: docker build -t natnov0809/devops_ws:latest .
 
     - name: Push Docker image
-      run: docker push YOUR_DOCKERHUB_USERNAME/devops_ws:latest
+      run: docker push natnov0809/devops_ws:latest
+
