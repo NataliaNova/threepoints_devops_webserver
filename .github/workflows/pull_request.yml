@@ -1,0 +1,47 @@
+name: PR Quality Gate
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  pr-quality-gate:
+    runs-on: ubuntu-latest
+    env:
+      ALLOW_FILE: allow_pull_request.txt
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Analizar código (SAST)
+        run: echo "Realizando análisis de SAST"
+
+      - name: Comprobar si existe allow_pull_request.txt
+        id: check_file
+        run: |
+          if [ -f "${{ env.ALLOW_FILE }}" ]; then
+            echo "Archivo encontrado. Permitiendo Pull Request."
+            echo "allow_pull=true" >> $GITHUB_ENV
+          else
+            echo "Archivo NO encontrado. Impidiendo Pull Request."
+            echo "allow_pull=false" >> $GITHUB_ENV
+          fi
+
+      - name: Permitir Pull Request
+        if: env.allow_pull == 'true'
+        run: echo "✅ Permitiendo Pull Request"
+
+      - name: Impedir Pull Request
+        if: env.allow_pull == 'false'
+        run: |
+          echo "❌ Build fallida. Impidiendo Pull Request"
+          exit 1
+
+      - name: Guardar archivo como artefacto (si existe)
+        if: env.allow_pull == 'true'
+        uses: actions/upload-artifact@v3
+        with:
+          name: allow_pull_request
+          path: ${{ env.ALLOW_FILE }}
